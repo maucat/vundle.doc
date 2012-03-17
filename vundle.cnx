@@ -1,0 +1,236 @@
+*vundle.txt*	VIM的插件管理器			*vundle*
+
+					译者：maucat zjc009[AT]gmail.com
+					日期：2012.3.17
+
+目录~
+						*vundle-contents*
+=============================================================================
+
+1. 关于						|vundle-about|
+2. 功能						|vundle-why-vundle|
+3. 快速指南					|vundle-quickstart|
+4. 管理插件					|vundle-scripts|
+    4.1. 配置插件				|vundle-scripts-configure|
+    4.2. 安装插件				|vundle-scripts-install|
+    4.3. 升级插件				|vundle-scripts-update|
+    4.4. 搜索插件				|vundle-scripts-search|
+    4.5. 插件列表				|vundle-scripts-list|
+    4.6. 卸载插件				|vundle-scripts-cleanup|
+5. 交互模式					|vundle-interactive|
+6. 键映射					|vundle-keymappings|
+7. 选项						|vundle-options|
+
+=============================================================================
+
+1. 关于~
+						*vundle-about*
+Vundle是管理VIM插件的一个插件。她是VIM bundle的简写。她利用Git仓库来安装
+和更新插件，免去了安装和更新各种插件的烦恼。使用Vundle来安装插件的时候需要知道
+插件的Git仓库地址。
+
+2. 功能~
+						*vundle-why-vundle*
+-在 .vimrc 文件里配置和管理插件
+-安装插件（用命令 bundle)
+-升级插件
+-在VIM里搜索安装插件
+-卸载未使用的插件
+-管理插件目录
+-自动生成帮助标签文件
+
+Vundle利用[vim-scripts.org](http://vim-scripts.org)来搜索和安装插件
+
+3. 快速指南~
+						*vundle-quickstart*
+1) 安装Vundle: >
+
+	git clone http://github.com/gmarik/vundle.git ~/.vim/vundle.git
+
+2) 配置bundles:
+
+    .vimrc文件示例： >
+
+     set nocompatible               " 关闭兼容模式
+     filetype off                   " 安装Vundle要设置此项
+
+     set rtp+=~/.vim/vundle.git/ 
+     call vundle#rc()
+
+     " 让Vundle来管理自己
+     Bundle 'gmarik/vundle'
+
+     " 插件配置示例:
+     "
+     " github.com上的插件可如下设置
+     Bundle 'tpope/vim-fugitive'
+     Bundle 'Lokaltog/vim-easymotion'
+     "如果Vim插件在下一层目录，可如下配置
+     Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
+     " vim-scripts.org上的仓库可更简化配置
+     Bundle 'L9'
+     Bundle 'FuzzyFinder'
+     Bundle 'rails.vim'
+     " 其它仓库可如下配置
+     Bundle 'git://git.wincent.com/command-t.git'
+     " ...
+
+     filetype plugin indent on     " 应该设置此项
+     " or 
+     " filetype plugin on          " 可视插件需要设置
+
+3) 安装已经配置好的插件
+
+    在VIM里输入下列命令 >
+
+	:BundleInstall
+
+安装插件需要首先安装Git版本控制工具
+每个在.vimrc里配置了的插件都被安装到 ~/.vim/bundle/
+
+4. 管理插件~
+						*vundle-scripts*
+4.1 配置插件~
+						*vundle-scripts-configure*
+						*Bundle*
+
+在执行安装插件命令前应该先在.vimrc文件里用"Bundle"命令配置需要安装的插件i >
+
+    Bundle 'git_repo_uri'
+<
+'git_repo_uri'为一个可用的git仓库路径
+
+或者 >
+
+    Bundle 'script_name'
+
+'script-name'应该是插件的官方名称 (参看 |vundle-scripts-search| )
+
+Vundle是Github的粉丝，因此可用短语句来配置托管在Github的插件 >
+
+    Bundle 'tpope/vim-fugitive'
+
+等价于 >
+
+    Bundle 'http://github.com/tpope/vim-fugitive.git'
+
+注意：Vundle默认使用 http:// 协议来打开短网址
+
+4.2 安装插件~
+						*vundle-scripts-install*
+						*BundleInstall*
+    在VIM里输入: >
+
+    	:BundleInstall
+
+将安装在.vimrc文件里配置好的插件。插件安装好后会自动启用。一些要编绎和预配置的
+插件除外。
+
+BundleInstall也允许直接通过插件名来安装插件（即使插件未在.vimrc文件里配置过） >
+
+    :BundleInstall unite.vim
+
+将自动安装和激活插件unite.vim.你可以用<Tab>键来补全已知的插件名。
+
+注意：就如刚才所说，安装好后，Vundle并不会自动配置插件，你必须手动去配置。
+
+4.3 升级插件
+						*vundle-scripts-update*
+						*BundleInstall!*
+    在VIM里输入： >
+
+    	BundleInstall!			" 注意后面有个"!"
+
+此命令将会安装和升级所有在.vimrc里配置了的插件（也即全部重新安装）
+
+4.4 搜索插件~
+						*vundle-scripts-search*
+						*BundleSearch*
+    在VIM里输入： >
+
+    :BundleSearch foo
+
+此命令将会在一个新的分割窗口里列出和'foo'相匹配的插件，例如： >
+
+    Bundle "VimFootnotes"
+    Bundle "foo.vim"
+
+或者： >
+
+    :BundleSearch! foo
+
+此命令将会在搜索插件之前联网刷新插件列表。
+
+如果直接运行命令： >
+
+    :BundleSearch!
+
+此命令将会列出所有已知的插件
+
+搜索需要安装 curl (http://curl.haxx.se/)
+
+4.5 插件列表~
+						*vundle-scripts-list*
+						*BundleList*
+如果你想快速列出已经安装的插件，使用下面的命令： >
+
+    :BundleList
+
+4.6 卸载插件~
+						*vundle-scripts-cleanup*
+						*BundleClean*
+在VIM里输入命令： >
+
+    :BundleClean
+
+移除插件目录 .vim/bundle/ 里未使用的插件。删除之前需要确认。
+
+命令： >
+
+    BundleClean!
+
+此命令将会悄无声息的卸载所有未使用的插件。
+
+5. 交互模式~
+						*vundle-interactive*
+Vundle提供一个简单的交互模式来探索更多的插件。交互模式在任何由Vundle产生的分割
+窗口里都适用。例如： >
+
+    BundleSearch! unite
+
+这将会产生搜索匹配"unite"的插件，并产生一个分割窗口，形如： >
+
+    "Keymap: i - Install bundle; c - Cleanup; r - Refine list; R - Reload list
+    "Search results for: unite
+    Bundle 'unite.vim'
+    Bundle 'unite-yarm'
+    Bundle 'unite-gem'
+    Bundle 'unite-locate'
+    Bundle 'unite-font'
+    Bundle 'unite-colorscheme'
+
+在第一行（以"Keymap:"开头）提示的命令可用于光标选定的插件。把光标移动至
+"unite.vim"，按下 i （详细查看|Vundle-keymappings|），unite.vim 插件将会被安装
+。安装之后，插件就可以被使用了。
+
+注意:交互模式的安装并不会改动你的.vimrc文件，所以如果下次想默认启用在交互模式
+下安装的插件，你应该用Bundle配置你的.vimrc文件。
+
+6. 键映射~
+
+按键	|描述
+--------|---------------------------- >
+ i	|用光标下的名字做为参数运行命令 :BundleInstall
+ I	|如同 i ,但使用命令 :BundleInstall!
+ D	|删除选定的插件
+ c	|如同运行命令 :BundleClean
+ s	|如同运行命令 :BundleSearch
+ R	|从官方服务器上刷新插件列表
+
+7. 选项~
+						*vundle-options*
+ >
+    let g:vundle_default_git_proto = 'git'
+
+当仓库地址使用绝对地址时，使用"git"来代替"https"。
+vim:tw=78:ts=8:ft=help:norl:
