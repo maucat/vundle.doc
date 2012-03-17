@@ -10,6 +10,7 @@ $ git clone https://maucat@github.com/maucat/vundle.doc.git ~/.vim/doc/
 然后在vim里输入
 ```
 :helptags ~/.vim/doc
+```
 
 如果你已经在使用Vundle插件，那么
 
